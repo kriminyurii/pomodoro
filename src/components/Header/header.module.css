@@ -1,0 +1,18 @@
+.header {
+	max-width: 75%;
+	margin: 0;
+	padding: 10px 0 5px 0;
+	border-bottom: 1px solid rgba(137, 85, 85, 0.593);
+}
+
+.title {
+	display: flex;
+	align-items: center;
+	color: var(--color-text-primary);
+	font-size: 20px;
+	font-weight: 700;
+}
+
+.icon {
+	margin-right: 10px;
+}

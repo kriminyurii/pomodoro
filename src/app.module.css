@@ -1,10 +1,18 @@
-.mainContainer {
+.container {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 100%;
-	height: 100vh;
+}
+
+.mainWindow {
+	background-color: var(--background-color);
 	margin: 0;
 	padding: 0;
-	background-color: var(--background-color);
+	width: 100%;
+	height: 100vh;
+}
+
+.header {
+	margin: 0 auto;
+	margin-bottom: 30px;
 }
