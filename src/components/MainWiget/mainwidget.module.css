@@ -8,3 +8,9 @@
 	color: var(--color-text-primary);
 	background-color: var(--color-red-highlighted);
 }
+
+.timer {
+	font-size: 40px;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+}
