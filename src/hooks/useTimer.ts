@@ -1,47 +1,59 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import useInterval from "./useInterval";
 
 const MILISECONDS_IN_SECOND = 1000;
 
-const getDuration = (date: Date) => {
-	if (!date) return null;
-	const nowTime = new Date().getTime();
-	const targetTime = date.getTime();
-	const duration = Number.isFinite(targetTime) ? targetTime - nowTime : null;
-	return duration;
+const getDuration = (targetTime: number) => {
+	if (!targetTime) return null;
+	const nowTime = Date.now();
+	return Number.isFinite(targetTime) ? targetTime - nowTime : null;
 };
 
 const getDelay = (duration: number | null) => {
-	if (duration === null) return null;
+	if (!duration) return duration;
 	const milisecondsToNextSecond =
 		duration % MILISECONDS_IN_SECOND || MILISECONDS_IN_SECOND;
 	return milisecondsToNextSecond;
 };
 
 const useTimer = (finishDate: Date) => {
-	const [duration, setDuration] = useState(getDuration(finishDate));
-	const [delay, setDelay] = useState<number | null>(
-		getDelay(getDuration(finishDate))
+	const [duration, setDuration] = useState<number | null>(
+		getDuration(finishDate.getTime())
 	);
 	const [finished, setFinished] = useState(false);
+	const [isPaused, setIsPaused] = useState(false);
+	const [finishTime, setFinishTime] = useState<number>(finishDate.getTime());
+
+	const delay = useMemo(() => {
+		if (duration !== null && duration <= 0) {
+			setFinished(true);
+			return null;
+		} else {
+			return getDelay(duration);
+		}
+	}, [duration]);
 
 	const handleChange = useCallback(() => {
-		const newDuration = getDuration(finishDate);
-		if (newDuration && newDuration <= 0) {
-			setFinished(true);
-			setDuration(null);
-			setDelay(null);
-		} else if (newDuration !== null) {
-			setDuration(newDuration);
-			setDelay(getDelay(newDuration));
-		} else {
-			setDelay(null);
+		setDuration(getDuration(finishTime));
+	}, [isPaused]);
+
+	const pause = useCallback(() => {
+		setIsPaused(true);
+	}, []);
+
+	const resume = useCallback(() => {
+		if (isPaused) {
+			const currentDuration = getDuration(finishTime);
+			const diff = duration && currentDuration && duration - currentDuration;
+			const newFinishTime = diff && finishTime + diff;
+			newFinishTime && setFinishTime(newFinishTime);
 		}
-	}, [finishDate]);
+		setIsPaused(false);
+	}, [isPaused]);
 
-	useInterval(handleChange, delay);
+	useInterval(handleChange, isPaused ? null : delay);
 
-	return { duration, finished };
+	return { duration, finished, pause, resume, isPaused };
 };
 
 export default useTimer;
