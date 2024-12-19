@@ -1,0 +1,80 @@
+.radialProgress {
+	position: relative;
+	width: 120px;
+	height: 120px;
+	line-height: 0;
+	border-width: 0;
+	color: white;
+	border-color: white;
+	border-style: dotted;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-grow: 0;
+	flex-shrink: 0;
+}
+.radialProgress::before {
+	content: "";
+	opacity: 0.3;
+	position: absolute;
+	left: 1px;
+	bottom: 1px;
+	right: 1px;
+	top: 1px;
+	border-width: 2px;
+	border-style: inherit;
+	border-color: inherit;
+	border-radius: 50%;
+}
+
+.clip {
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 50%;
+}
+
+.progress {
+	position: absolute;
+	overflow: hidden;
+	top: 0;
+	height: 100%;
+	width: 100%;
+}
+
+.progress::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	height: 100%;
+	width: 200%;
+	box-shadow: inset 0 0 0 3.5px currentColor;
+	border-radius: 50%;
+}
+
+.clip.firstHalf {
+	right: 0;
+}
+
+.clip.firstHalf .progress {
+	right: 100%;
+	transform-origin: right center;
+}
+
+.clip.firstHalf .progress .progress::after {
+	left: 0;
+}
+
+.clip.secondHalf {
+	left: 0;
+}
+
+.clip.secondHalf .progress {
+	left: 100%;
+	transform-origin: left center;
+}
+
+.clip.secondHalf .progress::after {
+	right: 0;
+}
