@@ -2,21 +2,30 @@ import { useState } from "react";
 import Timer from "../Common/Time/Timer";
 import styles from "./mainwidget.module.css";
 
-const twentyFiveMinutesFromNow = new Date(Date.now() + 25 * 60 * 1000);
+const twentyFiveMinutesFromNow = new Date(Date.now() + 30000);
 
 export default function MainWidget() {
-	const [message, setMessage] = useState<string | null>(null);
+	const [paused, setPaused] = useState<boolean>(false);
 
-	const handleFinish = () => {
-		setMessage("Time is up!");
+	const pauseTimer = () => {
+		setPaused(true);
+	};
+
+	const resumeTimer = () => {
+		setPaused(false);
 	};
 
 	return (
 		<div className={styles.mainWidget}>
-			<Timer className={styles.timer} onFinish={handleFinish}>
+			<Timer paused={paused} className={styles.timer}>
 				{twentyFiveMinutesFromNow}
 			</Timer>
-			{message && <div>finished message {message}</div>}
+			<button type="button" onClick={pauseTimer}>
+				Pause
+			</button>
+			<button type="button" onClick={resumeTimer}>
+				Resume
+			</button>
 		</div>
 	);
 }
