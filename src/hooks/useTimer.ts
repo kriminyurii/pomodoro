@@ -3,7 +3,7 @@ import useInterval from "./useInterval";
 
 const MILISECONDS_IN_SECOND = 1000;
 
-const getDuration = (targetTime: number) => {
+export const getDuration = (targetTime: number) => {
 	if (!targetTime) return null;
 	const nowTime = Date.now();
 	return Number.isFinite(targetTime) ? targetTime - nowTime : null;
@@ -53,7 +53,7 @@ const useTimer = (finishDate: Date) => {
 
 	useInterval(handleChange, isPaused ? null : delay);
 
-	return { duration, finished, pause, resume, isPaused };
+	return { duration, finished, finishTime, pause, resume, isPaused };
 };
 
 export default useTimer;
