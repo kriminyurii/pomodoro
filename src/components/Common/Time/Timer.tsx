@@ -1,4 +1,4 @@
-import { memo, useEffect } from "react";
+import { useEffect } from "react";
 import useTimer from "../../../hooks/useTimer";
 
 const SECOND = 1000;
@@ -9,9 +9,10 @@ interface TimerProps {
 	className?: string;
 	children: Date;
 	paused?: boolean;
+	onChange?: (duration: number | null) => void;
 	onFinish?: () => void;
 	onPause?: () => void;
-	onResume?: () => void;
+	onResume?: (finishTime: number) => void;
 }
 
 const formatTime = (duration: number | null) => {
@@ -35,11 +36,13 @@ const Timer = ({
 	onPause,
 	onResume,
 }: TimerProps) => {
-	const { duration, finished, pause, resume } = useTimer(children);
+	const { duration, finished, finishTime, pause, resume } = useTimer(children);
 
-	if (finished && onFinish) {
-		onFinish();
-	}
+	useEffect(() => {
+		if (finished && onFinish) {
+			onFinish();
+		}
+	}, [finished, onFinish]);
 
 	useEffect(() => {
 		if (paused) {
@@ -47,11 +50,11 @@ const Timer = ({
 			onPause?.();
 		} else {
 			resume();
-			onResume?.();
+			onResume?.(finishTime);
 		}
 	}, [paused, pause, resume, onPause, onResume]);
 
 	return <time className={className}>{formatTime(duration)}</time>;
 };
 
-export default memo(Timer);
+export default Timer;
