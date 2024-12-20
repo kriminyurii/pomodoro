@@ -51,7 +51,7 @@ const Timer = ({
 		}
 	}, [paused, pause, resume, onPause, onResume]);
 
-	return <div className={className}>{formatTime(duration)}</div>;
+	return <time className={className}>{formatTime(duration)}</time>;
 };
 
 export default memo(Timer);
