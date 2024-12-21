@@ -2,9 +2,9 @@ import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 import RadialProgress from "../../RadialProgress/RadialProgress";
 import { getDuration } from "../../../../hooks/useTimer";
-import styles from "./radialprogresstimer.module.css";
 import Timer from "../Timer";
 import useRequestAnimationFrame from "../../../../hooks/useRequestAnimationFrame";
+import styles from "./radialprogresstimer.module.css";
 
 interface RadialProgressTimerProps {
 	children: Date;
