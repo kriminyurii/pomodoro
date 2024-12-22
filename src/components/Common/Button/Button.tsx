@@ -1,3 +1,4 @@
+import { memo } from "react";
 import styles from "./button.module.css";
 import clsx from "clsx";
 
@@ -7,7 +8,7 @@ interface ButtonProps {
   onClick: () => void;
 }
 
-export default function Button({ onClick, children, className }: ButtonProps) {
+function Button({ onClick, children, className }: ButtonProps) {
   return (
     <button
       type="button"
@@ -18,3 +19,5 @@ export default function Button({ onClick, children, className }: ButtonProps) {
     </button>
   );
 }
+
+export default memo(Button);
