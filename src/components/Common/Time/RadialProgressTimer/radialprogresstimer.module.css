@@ -1,9 +1,11 @@
 .radialProgressTimer {
-	font-size: 120px;
-	width: 1em;
-	height: 1em;
+  font-size: 120px;
+  width: 1em;
+  height: 1em;
 }
 
 .time {
-	font-size: 0.2em;
+  font-size: 0.2em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
 }
