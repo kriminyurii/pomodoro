@@ -1,59 +1,57 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import useInterval from "./useInterval";
 
 const MILISECONDS_IN_SECOND = 1000;
 
 export const getDuration = (targetTime: number) => {
-	if (!targetTime) return null;
-	const nowTime = Date.now();
-	return Number.isFinite(targetTime) ? targetTime - nowTime : null;
+  if (!targetTime) return null;
+  const nowTime = Date.now();
+  return Number.isFinite(targetTime) ? targetTime - nowTime : null;
 };
 
 const getDelay = (duration: number | null) => {
-	if (!duration) return duration;
-	const milisecondsToNextSecond =
-		duration % MILISECONDS_IN_SECOND || MILISECONDS_IN_SECOND;
-	return milisecondsToNextSecond;
+  if (!duration) return duration;
+  const milisecondsToNextSecond =
+    duration % MILISECONDS_IN_SECOND || MILISECONDS_IN_SECOND;
+  return milisecondsToNextSecond;
 };
 
-const useTimer = (finishDate: Date) => {
-	const [duration, setDuration] = useState<number | null>(
-		getDuration(finishDate.getTime())
-	);
-	const [finished, setFinished] = useState(false);
-	const [isPaused, setIsPaused] = useState(false);
-	const [finishTime, setFinishTime] = useState<number>(finishDate.getTime());
+const calculateFinishTime = (currentFinishTime: number, duration: number) => {
+  const currentDuration = getDuration(currentFinishTime);
+  const diff = currentDuration && duration - currentDuration;
+  const newFinishTime = diff && currentFinishTime + diff;
+  return newFinishTime;
+};
 
-	const delay = useMemo(() => {
-		if (duration !== null && duration <= 0) {
-			setFinished(true);
-			return null;
-		} else {
-			return getDelay(duration);
-		}
-	}, [duration]);
+const useTimer = (finishDate: Date, isRunning: boolean = true) => {
+  const [duration, setDuration] = useState<number | null>(
+    getDuration(finishDate.getTime()),
+  );
+  const [finished, setFinished] = useState(false);
+  const [isPaused, setIsPaused] = useState(!isRunning);
+  const [finishTime, setFinishTime] = useState<number>(finishDate.getTime());
 
-	const handleChange = useCallback(() => {
-		setDuration(getDuration(finishTime));
-	}, [isPaused]);
+  const delay = useMemo(() => {
+    if (duration !== null && duration <= 0) {
+      setFinished(true);
+      return null;
+    } else {
+      return getDelay(duration);
+    }
+  }, [duration]);
 
-	const pause = useCallback(() => {
-		setIsPaused(true);
-	}, []);
+  const handleChange = useCallback(() => {
+    setDuration(getDuration(finishTime));
+  }, [finishTime]);
 
-	const resume = useCallback(() => {
-		if (isPaused) {
-			const currentDuration = getDuration(finishTime);
-			const diff = duration && currentDuration && duration - currentDuration;
-			const newFinishTime = diff && finishTime + diff;
-			newFinishTime && setFinishTime(newFinishTime);
-		}
-		setIsPaused(false);
-	}, [isPaused]);
+  useEffect(() => {
+    const newFinishTime = calculateFinishTime(finishTime, duration);
+    newFinishTime && setFinishTime(newFinishTime);
+  }, [isRunning]);
 
-	useInterval(handleChange, isPaused ? null : delay);
+  useInterval(handleChange, isRunning ? delay : null);
 
-	return { duration, finished, finishTime, pause, resume, isPaused };
+  return { duration, finished, finishTime, isPaused };
 };
 
 export default useTimer;
