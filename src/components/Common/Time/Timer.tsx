@@ -5,11 +5,10 @@ const SECOND = 1000;
 const SEC_IN_MINUTE = 60;
 const MINS_IN_HOUR = 60;
 
-interface TimerProps {
+export interface TimerProps {
   className?: string;
   children: Date;
   isRunning?: boolean;
-  onChange?: (duration: number | null) => void;
   onFinish?: () => void;
   onPause?: () => void;
   onResume?: (finishTime: number) => void;
