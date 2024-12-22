@@ -28,7 +28,6 @@ const useTimer = (finishDate: Date, isRunning: boolean = true) => {
     getDuration(finishDate.getTime()),
   );
   const [finished, setFinished] = useState(false);
-  const [isPaused, setIsPaused] = useState(!isRunning);
   const [finishTime, setFinishTime] = useState<number>(finishDate.getTime());
 
   const delay = useMemo(() => {
@@ -51,7 +50,7 @@ const useTimer = (finishDate: Date, isRunning: boolean = true) => {
 
   useInterval(handleChange, isRunning ? delay : null);
 
-  return { duration, finished, finishTime, isPaused };
+  return { duration, finished, finishTime };
 };
 
 export default useTimer;
