@@ -1,0 +1,16 @@
+.pomodoroCycleProgress {
+  display: flex;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  column-gap: 5px;
+}
+
+.item {
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.item.active {
+  background-color: var(--color-active);
+}
