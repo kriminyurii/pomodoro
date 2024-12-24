@@ -1,10 +1,11 @@
-import { useCallback, useMemo, useState, useEffect } from "react";
+import { useCallback, useMemo, useState, useRef, useEffect } from "react";
 import useInterval from "./useInterval";
 
 const MILISECONDS_IN_SECOND = 1000;
 
-export const getDuration = (targetTime: number) => {
-  if (!targetTime) return null;
+export const getDuration = (targetDate: Date | null) => {
+  if (!targetDate) return null;
+  const targetTime = targetDate.getTime();
   const nowTime = Date.now();
   return Number.isFinite(targetTime) ? targetTime - nowTime : null;
 };
@@ -16,19 +17,11 @@ const getDelay = (duration: number | null) => {
   return milisecondsToNextSecond;
 };
 
-const calculateFinishTime = (currentFinishTime: number, duration: number) => {
-  const currentDuration = getDuration(currentFinishTime);
-  const diff = currentDuration && duration - currentDuration;
-  const newFinishTime = diff && currentFinishTime + diff;
-  return newFinishTime;
-};
-
 const useTimer = (finishDate: Date, isRunning: boolean = true) => {
   const [duration, setDuration] = useState<number | null>(
-    getDuration(finishDate.getTime()),
+    getDuration(finishDate),
   );
   const [finished, setFinished] = useState(false);
-  const [finishTime, setFinishTime] = useState<number>(finishDate.getTime());
 
   const delay = useMemo(() => {
     if (duration !== null && duration <= 0) {
@@ -40,17 +33,12 @@ const useTimer = (finishDate: Date, isRunning: boolean = true) => {
   }, [duration]);
 
   const handleChange = useCallback(() => {
-    setDuration(getDuration(finishTime));
-  }, [finishTime]);
-
-  useEffect(() => {
-    const newFinishTime = calculateFinishTime(finishTime, duration);
-    newFinishTime && setFinishTime(newFinishTime);
-  }, [isRunning]);
+    setDuration(getDuration(finishDate));
+  }, [finishDate]);
 
   useInterval(handleChange, isRunning ? delay : null);
 
-  return { duration, finished, finishTime };
+  return { duration, finished };
 };
 
 export default useTimer;
