@@ -25,6 +25,7 @@ const calculateFinishDate = (finishDate: Date, currentDuration: number) => {
 };
 
 const useTimer = (finishDateProps: Date, onFinish?: () => void) => {
+	const [didStarted, setDidStarted] = useState<boolean>(false);
 	const [isRunning, setIsRunning] = useState<boolean>(false);
 	const [delay, setDelay] = useState<number | null>(null);
 	const [finishDate, setFinishDate] = useState<Date>(finishDateProps);
@@ -34,11 +35,14 @@ const useTimer = (finishDateProps: Date, onFinish?: () => void) => {
 
 	const start = useCallback(
 		(finishDate: Date) => {
+			if (didStarted) return;
+
+			setDidStarted(true);
 			setIsRunning(true);
 			setFinishDate(finishDate);
 			setDelay(getDelay(duration));
 		},
-		[duration]
+		[duration, didStarted]
 	);
 
 	const pause = useCallback(() => {
@@ -47,12 +51,14 @@ const useTimer = (finishDateProps: Date, onFinish?: () => void) => {
 
 	const resume = useCallback(
 		(finishDate: Date) => {
+			if (!didStarted) return;
+
 			const newFinishDate = calculateFinishDate(finishDate, duration || 0);
 			setIsRunning(true);
 			setFinishDate(newFinishDate);
 			setDelay(getDelay(duration));
 		},
-		[duration]
+		[duration, didStarted, start, finishDateProps]
 	);
 
 	const reset = useCallback((finishDate: Date) => {
