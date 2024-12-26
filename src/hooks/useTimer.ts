@@ -1,44 +1,74 @@
-import { useCallback, useMemo, useState, useRef, useEffect } from "react";
+import { useCallback, useState } from "react";
 import useInterval from "./useInterval";
 
 const MILISECONDS_IN_SECOND = 1000;
 
 export const getDuration = (targetDate: Date | null) => {
-  if (!targetDate) return null;
-  const targetTime = targetDate.getTime();
-  const nowTime = Date.now();
-  return Number.isFinite(targetTime) ? targetTime - nowTime : null;
+	if (!targetDate) return null;
+	const targetTime = targetDate.getTime();
+	const nowTime = Date.now();
+	return Number.isFinite(targetTime) ? targetTime - nowTime : null;
 };
 
 const getDelay = (duration: number | null) => {
-  if (!duration) return duration;
-  const milisecondsToNextSecond =
-    duration % MILISECONDS_IN_SECOND || MILISECONDS_IN_SECOND;
-  return milisecondsToNextSecond;
+	if (!duration) return duration;
+	const milisecondsToNextSecond =
+		duration % MILISECONDS_IN_SECOND || MILISECONDS_IN_SECOND;
+	return milisecondsToNextSecond;
 };
 
-const useTimer = (finishDate: Date, isRunning: boolean = true) => {
-  const [duration, setDuration] = useState<number | null>(
-    getDuration(finishDate),
-  );
-  const [finished, setFinished] = useState(false);
+const calculateFinishDate = (finishDate: Date, currentDuration: number) => {
+	const actualDuration = getDuration(finishDate);
+	const diff = Math.max(currentDuration - (actualDuration || 0), 0);
+	const newFinishDate = new Date(finishDate.getTime() + diff);
+	return newFinishDate;
+};
 
-  const delay = useMemo(() => {
-    if (duration !== null && duration <= 0) {
-      setFinished(true);
-      return null;
-    } else {
-      return getDelay(duration);
-    }
-  }, [duration]);
+const useTimer = (finishDateProps: Date, onFinish?: () => void) => {
+	const [isRunning, setIsRunning] = useState<boolean>(false);
+	const [delay, setDelay] = useState<number | null>(null);
+	const [finishDate, setFinishDate] = useState<Date>(finishDateProps);
+	const [duration, setDuration] = useState<number | null>(
+		getDuration(finishDate)
+	);
 
-  const handleChange = useCallback(() => {
-    setDuration(getDuration(finishDate));
-  }, [finishDate]);
+	const start = useCallback(
+		(finishDate: Date) => {
+			setIsRunning(true);
+			setFinishDate(finishDate);
+			setDelay(getDelay(duration));
+		},
+		[duration]
+	);
 
-  useInterval(handleChange, isRunning ? delay : null);
+	const pause = useCallback(() => {
+		setIsRunning(false);
+	}, []);
 
-  return { duration, finished };
+	const resume = useCallback(
+		(finishDate: Date) => {
+			const newFinishDate = calculateFinishDate(finishDate, duration || 0);
+			setIsRunning(true);
+			setFinishDate(newFinishDate);
+			setDelay(getDelay(duration));
+		},
+		[duration]
+	);
+
+	const reset = useCallback(() => {}, []);
+
+	const handleChange = useCallback(() => {
+		const newDuration = getDuration(finishDate);
+		if (newDuration && newDuration <= 0) {
+			setIsRunning(false);
+			onFinish?.();
+		}
+		setDuration(getDuration(finishDate));
+	}, [finishDate, onFinish]);
+
+	useInterval(handleChange, isRunning ? delay : null);
+
+	return { duration, isRunning, start, pause, resume, reset };
 };
 
 export default useTimer;
