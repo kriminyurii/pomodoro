@@ -55,7 +55,12 @@ const useTimer = (finishDateProps: Date, onFinish?: () => void) => {
 		[duration]
 	);
 
-	const reset = useCallback(() => {}, []);
+	const reset = useCallback((finishDate: Date) => {
+		const fullDuration = getDuration(finishDate);
+		setDuration(fullDuration);
+		setIsRunning(false);
+		setFinishDate(finishDate);
+	}, []);
 
 	const handleChange = useCallback(() => {
 		const newDuration = getDuration(finishDate);

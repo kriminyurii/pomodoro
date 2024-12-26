@@ -35,7 +35,10 @@ const getCurrentFinishDate = (duration: number) =>
 
 const Timer = ({ className, children, onFinish }: TimerProps) => {
 	const [finishDate, setFinishDate] = useState(getCurrentFinishDate(children));
-	const { duration, start, pause, resume } = useTimer(finishDate, onFinish);
+	const { duration, start, pause, resume, reset } = useTimer(
+		finishDate,
+		onFinish
+	);
 
 	const handleStart = useCallback(() => {
 		const finishDate = getCurrentFinishDate(children);
@@ -47,12 +50,19 @@ const Timer = ({ className, children, onFinish }: TimerProps) => {
 		resume(finishDate);
 	}, [resume]);
 
+	const handleReset = useCallback(() => {
+		const finishDate = getCurrentFinishDate(children);
+		setFinishDate(finishDate);
+		reset(finishDate);
+	}, [reset, children]);
+
 	return (
 		<div className={clsx(styles.timer, className)}>
 			<time className={styles.time}>{formatTime(duration)}</time>
 			<Button onClick={handleStart}>Start</Button>
 			<Button onClick={pause}>Pause</Button>
 			<Button onClick={handleResume}>Resume</Button>
+			<Button onClick={handleReset}>Reset</Button>
 		</div>
 	);
 };
