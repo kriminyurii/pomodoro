@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import clsx from "clsx";
 import RadialProgress from "../Common/RadialProgress/RadialProgress";
 import useTimer from "../../hooks/useTimer";
@@ -79,4 +79,4 @@ function PomodoroTimer({
 	);
 }
 
-export default PomodoroTimer;
+export default memo(PomodoroTimer);
