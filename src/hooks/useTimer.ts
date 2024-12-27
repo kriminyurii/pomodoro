@@ -66,6 +66,7 @@ const useTimer = (finishDateProps: Date, onFinish?: () => void) => {
 		setDuration(fullDuration);
 		setIsRunning(false);
 		setFinishDate(finishDate);
+		setDidStarted(false);
 	}, []);
 
 	const handleChange = useCallback(() => {
@@ -79,7 +80,7 @@ const useTimer = (finishDateProps: Date, onFinish?: () => void) => {
 
 	useInterval(handleChange, isRunning ? delay : null);
 
-	return { duration, isRunning, start, pause, resume, reset };
+	return { duration, finishDate, isRunning, start, pause, resume, reset };
 };
 
 export default useTimer;
