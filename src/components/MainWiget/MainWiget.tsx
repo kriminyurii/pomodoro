@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import PomodoroCycleProgress, {
 	LONG_BREAK,
 	POMODORO,
@@ -13,22 +13,32 @@ const SEC_IN_MINUTE = 60;
 const POMODORO_TIMER = 25 * SEC_IN_MINUTE * SECOND;
 const SHORT_BREAK_TIMER = 5 * SEC_IN_MINUTE * SECOND;
 const LONG_BREAK_TIMER = 30 * SEC_IN_MINUTE * SECOND;
+const LAST_POMODORO_CYCLE = 4;
 
 export default function MainWidget() {
+	const pomodoroCycle = useRef(0);
 	const [currentPomodoroStep, setCurrentPomodoroStep] = useState(POMODORO);
 	const [timerDuration, setTimerDuration] = useState(POMODORO_TIMER);
 
 	const handleFinish = () => {
-		switch (currentPomodoroStep) {
-			case POMODORO:
+		switch (true) {
+			case currentPomodoroStep === POMODORO &&
+				pomodoroCycle.current < LAST_POMODORO_CYCLE:
 				setTimerDuration(SHORT_BREAK_TIMER);
 				setCurrentPomodoroStep(SHORT_BREAK);
+				pomodoroCycle.current += 1;
 				break;
-			case "Short Break":
+			case currentPomodoroStep === SHORT_BREAK &&
+				pomodoroCycle.current < LAST_POMODORO_CYCLE:
+				setTimerDuration(POMODORO_TIMER);
+				setCurrentPomodoroStep(POMODORO);
+				break;
+			case currentPomodoroStep === SHORT_BREAK &&
+				pomodoroCycle.current === LAST_POMODORO_CYCLE:
 				setTimerDuration(LONG_BREAK_TIMER);
 				setCurrentPomodoroStep(LONG_BREAK);
 				break;
-			case "Long Break":
+			case currentPomodoroStep === LONG_BREAK:
 			default:
 				setTimerDuration(POMODORO_TIMER);
 				setCurrentPomodoroStep(POMODORO);
