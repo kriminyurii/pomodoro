@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext, useContext } from "react";
 
 export interface PomodoroContextProps {
 	steps: string[];
@@ -10,3 +10,11 @@ export interface PomodoroContextProps {
 export const PomodoroContext = createContext<PomodoroContextProps | undefined>(
 	undefined
 );
+
+export const usePomodoro = (): PomodoroContextProps => {
+	const context = useContext(PomodoroContext);
+	if (!context) {
+		throw new Error("usePomodoro must be used within a PomodoroProvider");
+	}
+	return context;
+};
