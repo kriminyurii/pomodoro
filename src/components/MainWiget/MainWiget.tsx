@@ -36,6 +36,11 @@ export default function MainWidget() {
 		}
 	};
 
+	const handleReset = () => {
+		setTimerDuration(POMODORO_TIMER);
+		setCurrentPomodoroStep(POMODORO);
+	};
+
 	return (
 		<div className={styles.mainWidget}>
 			<PomodoroCycleProgress
@@ -45,6 +50,7 @@ export default function MainWidget() {
 			<PomodoroTimer
 				key={timerDuration}
 				onFinish={handleFinish}
+				onReset={handleReset}
 				className={styles.timer}
 			>
 				{timerDuration}

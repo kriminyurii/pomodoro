@@ -14,12 +14,14 @@ interface RadialProgressTimerProps {
 	className?: string;
 	children: number;
 	onFinish?: () => void;
+	onReset?: () => void;
 }
 
 function PomodoroTimer({
 	className,
 	children,
 	onFinish,
+	onReset,
 }: RadialProgressTimerProps) {
 	const [valueTime, setValueTime] = useState(Date.now());
 	const [finishDate, setFinishDate] = useState(getCurrentFinishDate(children));
@@ -54,6 +56,7 @@ function PomodoroTimer({
 		setFinishDate(finishDate);
 		setValueTime(startTime);
 		reset(finishDate);
+		onReset?.();
 	}, [reset, children]);
 
 	return (
