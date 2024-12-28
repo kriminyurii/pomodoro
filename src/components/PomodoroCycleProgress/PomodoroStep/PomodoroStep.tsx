@@ -1,6 +1,6 @@
 import { memo } from "react";
 import clsx from "clsx";
-import { usePomodoro } from "../PomodoroStepsHost";
+import { usePomodoro } from "../PomodoroContext";
 import styles from "./pomodorostep.module.css";
 
 interface PomodoroStepProps {

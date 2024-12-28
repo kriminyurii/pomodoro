@@ -3,10 +3,10 @@ import { PomodoroContext } from "./PomodoroContext";
 
 interface PomodoroStepsHostProps {
 	children: ReactNode;
-	steps: string[];
+	steps?: string[];
 	currentStep: string;
-	selectCurrentStep: (step: string) => void;
-	resetSteps: () => void;
+	selectCurrentStep?: (step: string) => void;
+	resetSteps?: () => void;
 }
 
 export const PomodoroStepsHost = ({

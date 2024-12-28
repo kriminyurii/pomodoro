@@ -1,24 +1,43 @@
-import { memo } from "react";
+import { memo, useState, useEffect } from "react";
 import clsx from "clsx";
 import styles from "./pomodorocycleprogress.module.css";
+import { PomodoroStepsHost } from "./PomodoroStepsHost";
+import PomodoroStep from "./PomodoroStep/PomodoroStep";
 
 interface PomodoroCycleProgressProps {
 	className?: string;
+	currentStep?: string;
 }
 
+export const POMODORO = "Pomodoro";
+export const SHORT_BREAK = "Short Break";
+export const LONG_BREAK = "Long Break";
+const steps = [POMODORO, SHORT_BREAK, LONG_BREAK];
+
 const PomodoroCycleProgress: React.FC<PomodoroCycleProgressProps> = ({
+	currentStep,
 	className,
 }) => {
-	let active = true;
+	const [current, setCurrentStep] = useState(POMODORO);
+
+	useEffect(() => {
+		if (currentStep) {
+			setCurrentStep(currentStep);
+		}
+	}, [currentStep]);
+
+	const resetSteps = () => setCurrentStep(POMODORO);
 
 	return (
-		<div className={clsx(styles.pomodoroCycleProgress, className)}>
-			<div className={clsx(styles.item, { [styles.active]: active })}>
-				Pomodoro
+		<PomodoroStepsHost currentStep={current} resetSteps={resetSteps}>
+			<div className={clsx(styles.pomodoroCycleProgress, className)}>
+				{steps.map((step) => (
+					<PomodoroStep key={step} className={styles.item}>
+						{step}
+					</PomodoroStep>
+				))}
 			</div>
-			<div className={styles.item}>Short Break</div>
-			<div className={styles.item}>Long break</div>
-		</div>
+		</PomodoroStepsHost>
 	);
 };
 
