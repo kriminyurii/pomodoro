@@ -4,13 +4,13 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	flex-direction: column;
 	font-size: 20px;
+	padding: 20px 0;
 	color: var(--color-text-primary);
 	background-color: var(--color-red-highlighted);
 }
 
-.timer {
-	font-size: 40px;
-	font-weight: 700;
-	letter-spacing: 0.05em;
+.progress {
+	margin-bottom: 20px;
 }
