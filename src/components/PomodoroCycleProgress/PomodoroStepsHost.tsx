@@ -1,22 +1,21 @@
-import { useContext, useState, ReactNode, useMemo } from "react";
-import { PomodoroContext, PomodoroContextProps } from "./PomodoroContext";
+import { ReactNode, useMemo } from "react";
+import { PomodoroContext } from "./PomodoroContext";
 
-export const POMODORO = "Pomodoro";
-export const SHORT_BREAK = "Short Break";
-export const LONG_BREAK = "Long Break";
-const steps = [POMODORO, SHORT_BREAK, LONG_BREAK];
+interface PomodoroStepsHostProps {
+	children: ReactNode;
+	steps: string[];
+	currentStep: string;
+	selectCurrentStep: (step: string) => void;
+	resetSteps: () => void;
+}
 
-export const PomodoroStepsHost = ({ children }: { children: ReactNode }) => {
-	const [currentStep, setCurrentStep] = useState<string>(POMODORO);
-
-	const selectCurrentStep = (nextStep: string) => {
-		setCurrentStep(nextStep);
-	};
-
-	const resetSteps = () => {
-		setCurrentStep(POMODORO);
-	};
-
+export const PomodoroStepsHost = ({
+	children,
+	steps,
+	currentStep,
+	selectCurrentStep,
+	resetSteps,
+}: PomodoroStepsHostProps) => {
 	const contextValue = useMemo(
 		() => ({
 			steps,
@@ -24,7 +23,7 @@ export const PomodoroStepsHost = ({ children }: { children: ReactNode }) => {
 			selectCurrentStep,
 			resetSteps,
 		}),
-		[currentStep]
+		[steps, currentStep, selectCurrentStep, resetSteps]
 	);
 
 	return (
@@ -32,12 +31,4 @@ export const PomodoroStepsHost = ({ children }: { children: ReactNode }) => {
 			{children}
 		</PomodoroContext.Provider>
 	);
-};
-
-export const usePomodoro = (): PomodoroContextProps => {
-	const context = useContext(PomodoroContext);
-	if (!context) {
-		throw new Error("usePomodoro must be used within a PomodoroProvider");
-	}
-	return context;
 };
