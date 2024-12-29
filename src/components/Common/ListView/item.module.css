@@ -3,6 +3,7 @@
 	color: var(--color-text-primary);
 	background-color: var(--color-red-highlighted);
 	transition: background-color 150ms ease;
+	cursor: pointer;
 }
 
 .item + .item {
