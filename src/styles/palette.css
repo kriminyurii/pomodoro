@@ -1,7 +1,8 @@
 :root {
-  --background-color: #c85e55;
-  --color-red-highlighted: #ce6f66;
-  --color-text-primary: #ffffff;
-  --color-inactive: #cc685f;
-  --color-active: #b9534a;
+	--background-color: #c85e55;
+	--color-red-highlighted: #ce6f66;
+	--color-text-primary: #ffffff;
+	--color-text-secondary: #ffffff61;
+	--color-inactive: #cc685f;
+	--color-active: #b9534a;
 }
