@@ -1,6 +1,6 @@
-import { useContext, ReactNode, memo } from "react";
+import { ReactNode, memo } from "react";
 import clsx from "clsx";
-import { ListViewContext } from "./ListView";
+import { useListView } from "./ListView";
 import styles from "./item.module.css";
 
 interface ItemProps {
@@ -10,11 +10,7 @@ interface ItemProps {
 }
 
 const Item = ({ id, children, className }: ItemProps) => {
-	const context = useContext(ListViewContext);
-
-	if (!context) {
-		throw new Error("Item must be used within a ListView");
-	}
+	const context = useListView();
 
 	const { state, onAction } = context;
 	const { selectedKeys, toggleKey } = state;

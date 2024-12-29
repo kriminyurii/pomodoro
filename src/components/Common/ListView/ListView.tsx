@@ -2,6 +2,7 @@ import React, {
 	createContext,
 	memo,
 	ReactNode,
+	useContext,
 	useMemo,
 	useState,
 } from "react";
@@ -28,6 +29,14 @@ interface ListViewContextValue {
 export const ListViewContext = createContext<ListViewContextValue | undefined>(
 	undefined
 );
+
+export const useListView = (): ListViewContextValue => {
+	const context = useContext(ListViewContext);
+	if (!context) {
+		throw new Error("Item must be used within a ListView");
+	}
+	return context;
+};
 
 const ListView = ({
 	className,
