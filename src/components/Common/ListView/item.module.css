@@ -1,0 +1,15 @@
+.item {
+	padding: 8px;
+	color: var(--color-text-primary);
+	background-color: var(--color-red-highlighted);
+	transition: background-color 150ms ease;
+}
+
+.item + .item {
+	border-top: 1px solid var(--color-text-secondary);
+}
+
+.item.active {
+	background-color: var(--color-active);
+	text-decoration: line-through;
+}
