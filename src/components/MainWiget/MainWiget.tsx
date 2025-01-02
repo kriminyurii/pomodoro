@@ -1,10 +1,11 @@
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import PomodoroCycleProgress, {
 	LONG_BREAK,
 	POMODORO,
 	SHORT_BREAK,
 } from "../PomodoroCycleProgress/PomodoroCycleProgress";
 import PomodoroTimer from "../PomodoroTimer/PomodoroTimer";
+import clsx from "clsx";
 import styles from "./mainwidget.module.css";
 
 const SECOND = 1000;
@@ -15,7 +16,7 @@ const SHORT_BREAK_TIMER = 5 * SEC_IN_MINUTE * SECOND;
 const LONG_BREAK_TIMER = 30 * SEC_IN_MINUTE * SECOND;
 const LAST_POMODORO_CYCLE = 4;
 
-export default function MainWidget() {
+export default function MainWidget({ className }: { className?: string }) {
 	const pomodoroCycle = useRef(0);
 	const [currentPomodoroStep, setCurrentPomodoroStep] = useState(POMODORO);
 	const [timerDuration, setTimerDuration] = useState(POMODORO_TIMER);
@@ -46,13 +47,13 @@ export default function MainWidget() {
 		}
 	};
 
-	const handleReset = () => {
+	const handleReset = useCallback(() => {
 		setTimerDuration(POMODORO_TIMER);
 		setCurrentPomodoroStep(POMODORO);
-	};
+	}, []);
 
 	return (
-		<div className={styles.mainWidget}>
+		<div className={clsx(styles.mainWidget, className)}>
 			<PomodoroCycleProgress
 				currentStep={currentPomodoroStep}
 				className={styles.progress}
