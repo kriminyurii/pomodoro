@@ -32,3 +32,8 @@
 	font-size: 20px;
 	cursor: pointer;
 }
+
+.closeButton:active {
+	border: none;
+	background-color: unset;
+}
