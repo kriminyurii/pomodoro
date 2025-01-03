@@ -34,6 +34,7 @@ const Input: React.FC<InputProps> = ({
 			className={clsx(styles.input, className)}
 			aria-label={ariaLabel}
 			aria-labelledby={ariaLabelledBy}
+			autoComplete="off"
 			id={id}
 		/>
 	);

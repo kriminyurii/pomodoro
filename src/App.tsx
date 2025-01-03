@@ -60,7 +60,7 @@ function App() {
 					</button>
 				</div>
 				<Form className={styles.tasksForm} onSubmit={handleSubmit}>
-					<Input name="task" type="text" />
+					<Input name="task" ariaLabel="tasks" type="text" />
 					<input type="submit" style={{ display: "none" }} />
 				</Form>
 				<Modal onClose={handleHideModal} in={modalVisible}>
