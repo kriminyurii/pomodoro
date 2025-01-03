@@ -1,7 +1,9 @@
 .container {
+	max-width: 400px;
 	display: flex;
 	justify-content: center;
-	align-items: center;
+	flex-direction: column;
+	margin: 0 auto;
 }
 
 .mainWindow {
@@ -15,4 +17,63 @@
 .header {
 	margin: 0 auto;
 	margin-bottom: 30px;
+}
+
+.mainWidget {
+	margin-bottom: 20px;
+}
+
+.tasksForm {
+	width: 100%;
+	margin-bottom: 30px;
+}
+
+.tasksTitle {
+	color: var(--color-text-primary);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.emptyText {
+	color: var(--color-text-primary);
+	text-align: center;
+}
+
+.tasksButton {
+	font-size: 14px;
+	position: relative;
+	display: inline-flex;
+	height: 1.8em;
+	justify-content: space-between;
+	flex-direction: column;
+	color: var(--color-text-primary);
+	padding: 5px 10px;
+	background-color: var(--color-red-highlighted);
+	border: none;
+	box-shadow: unset;
+	transition: background-color 150ms ease;
+}
+
+.tasksButton:hover {
+	background-color: var(--color-inactive);
+}
+
+.tasksButton:active {
+	background-color: var(--color-active);
+}
+
+.tasksButton .dot {
+	line-height: 0.2em;
+}
+
+.modalTitle {
+	position: relative;
+	text-transform: uppercase;
+	font-weight: 500;
+	letter-spacing: 0.05em;
+	color: var(--color-text-primary);
+	text-align: center;
+	padding: 10px 0 15px;
+	border-bottom: 1px solid rgba(137, 85, 85, 0.593);
 }
