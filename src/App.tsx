@@ -1,7 +1,7 @@
 import "./styles/palette.css";
 import "./App.css";
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import Header from "./components/Header/Header";
 import MainWidget from "./components/MainWiget/MainWiget";
 import Form from "./components/Common/Form/Form";
@@ -9,16 +9,38 @@ import Input from "./components/Common/Form/Input/Input";
 import ListView from "./components/Common/ListView/ListView";
 import Item from "./components/Common/ListView/Item";
 import Modal from "./components/Common/Modal/Modal";
+import ListViewContextHost from "./components/Common/ListView/ListViewContextHost";
+import type { Task } from "./components/Common/ListView/ListViewContextHost";
 import styles from "./app.module.css";
-
-type Task = {
-	id: number;
-	value: string;
-};
 
 function App() {
 	const [modalVisible, setModalVisible] = useState<boolean>(false);
-	const [tasks, setTasks] = useState<Array<Task>>([]);
+	const [tasks, setTasks] = useState<Set<Task>>(new Set());
+	const arrayTasks = useMemo(() => Array.from(tasks), [tasks]).sort(
+		(a, b) => a.id - b.id
+	);
+
+	// const resetTasks = () => {
+	// 	setTasks(new Set());
+	// }; // TODO: сброс по кнопке ресет
+
+	const addTask = (task: Task) => {
+		const newTasks = new Set(tasks);
+		newTasks.add(task);
+		setTasks(newTasks);
+	};
+
+	const toggleTask = useCallback(
+		(task: Task) => {
+			if (!tasks.has(task)) return;
+			const newTasks = new Set(tasks);
+			newTasks.delete(task);
+			task.completed = !task.completed;
+			newTasks.add(task);
+			setTasks(newTasks);
+		},
+		[tasks]
+	);
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -26,9 +48,14 @@ function App() {
 		let taskValue = data.get("task") as string;
 
 		if (taskValue) {
-			let lastId = tasks[tasks.length - 1]?.id || 0;
-			const newTask = { id: lastId + 1, value: taskValue };
-			setTasks([...tasks, newTask]);
+			const lastTask = arrayTasks[arrayTasks.length - 1];
+			const id = (lastTask?.id || 0) + 1;
+			const newTask = {
+				id,
+				value: taskValue,
+				completed: false,
+			};
+			addTask(newTask);
 		}
 
 		e.currentTarget.reset();
@@ -65,18 +92,20 @@ function App() {
 				</Form>
 				<Modal onClose={handleHideModal} in={modalVisible}>
 					<h2 className={styles.modalTitle}>Tasks</h2>
-					{tasks.length === 0 ? (
+					{arrayTasks.length === 0 ? (
 						<div className={styles.emptyText}>
 							There is not tasks at the moment
 						</div>
 					) : (
-						<ListView>
-							{tasks.map((task) => (
-								<Item key={task.id} id={task.id}>
-									{task.value}
-								</Item>
-							))}
-						</ListView>
+						<ListViewContextHost tasks={tasks} toggleTask={toggleTask}>
+							<ListView>
+								{arrayTasks.map((task) => (
+									<Item key={task.id} task={task}>
+										{task.value}
+									</Item>
+								))}
+							</ListView>
+						</ListViewContextHost>
 					)}
 				</Modal>
 			</main>
