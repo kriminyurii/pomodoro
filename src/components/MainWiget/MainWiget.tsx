@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { memo, useCallback, useRef, useState } from "react";
 import PomodoroCycleProgress, {
 	LONG_BREAK,
 	POMODORO,
@@ -16,7 +16,13 @@ const SHORT_BREAK_TIMER = 5 * SEC_IN_MINUTE * SECOND;
 const LONG_BREAK_TIMER = 30 * SEC_IN_MINUTE * SECOND;
 const LAST_POMODORO_CYCLE = 4;
 
-export default function MainWidget({ className }: { className?: string }) {
+function MainWidget({
+	className,
+	onTimerReset,
+}: {
+	className?: string;
+	onTimerReset?: () => void;
+}) {
 	const pomodoroCycle = useRef(0);
 	const [currentPomodoroStep, setCurrentPomodoroStep] = useState(POMODORO);
 	const [timerDuration, setTimerDuration] = useState(POMODORO_TIMER);
@@ -50,6 +56,7 @@ export default function MainWidget({ className }: { className?: string }) {
 	const handleReset = useCallback(() => {
 		setTimerDuration(POMODORO_TIMER);
 		setCurrentPomodoroStep(POMODORO);
+		onTimerReset?.();
 	}, []);
 
 	return (
@@ -69,3 +76,5 @@ export default function MainWidget({ className }: { className?: string }) {
 		</div>
 	);
 }
+
+export default memo(MainWidget);

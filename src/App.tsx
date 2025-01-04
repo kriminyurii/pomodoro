@@ -20,9 +20,9 @@ function App() {
 		(a, b) => a.id - b.id
 	);
 
-	// const resetTasks = () => {
-	// 	setTasks(new Set());
-	// }; // TODO: сброс по кнопке ресет
+	const resetTasks = useCallback(() => {
+		setTasks(new Set());
+	}, []);
 
 	const addTask = (task: Task) => {
 		const newTasks = new Set(tasks);
@@ -73,7 +73,7 @@ function App() {
 		<div className={styles.mainWindow}>
 			<Header className={styles.header} />
 			<main className={styles.container}>
-				<MainWidget className={styles.mainWidget} />
+				<MainWidget onTimerReset={resetTasks} className={styles.mainWidget} />
 				<div className={styles.tasksTitle}>
 					Tasks{" "}
 					<button
