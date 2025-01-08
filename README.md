@@ -10,5 +10,4 @@ Over time, functionality will be added and the layout will be improved.
 - Animated Timer for each pomodoro cycle.
 - Tracking of clasic pomodoro cycles: Pomodoro (25 mins), Short break (5 mins), Long break (30 mins).
 - Tasks bindings.
-- End of cycle notifications. TODO: Will be implemented soon.
-- Audio signals while end of cycle notified. TODO: Will be implemented soon.
+- Auto start of the pomodoro cycles
